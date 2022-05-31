@@ -1,0 +1,24 @@
+//    srand(time(0));
+//    int ilePozostalo = 5;
+//    int lvl;
+//    printf("Ktory poziom?\n");
+//    scanf("%d", &lvl);
+//    DWORD start = GetTickCount();
+//    DWORD czas;
+//    while (ilePozostalo) {
+//        int liczba1 = losujLiczbe(1 * lvl, 5 * lvl);
+//        int liczba2 = losujLiczbe(1 * lvl, 5 * lvl);
+//        int szukana = stworzDzialanie(liczba1, liczba2);
+//        int zgadnieta;
+//        while (1) {
+//            scanf("%d", &zgadnieta);
+//            if (zgadnieta == szukana) break;
+//            else printf("Zla odpowiedz! Probuj dalej...\n");
+//        }
+//        ilePozostalo--;
+//        printf("Pozostalo jeszcze %d przykladow\n", ilePozostalo);
+//        czas = GetTickCount() - start;
+//        if (czas > 30000) break;
+//    }
+//    if (czas > 30000) printf("Porazka. Towarzyszu! Przekroczyliscie dozwolony czas!\n");
+//    else printf("Zwyciestwo. Gratulacje!\nRunda zajela %d.%3d sekund.\n", czas / 1000, czas - czas / 1000);
