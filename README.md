@@ -1,0 +1,100 @@
+# infix
+prosta gra typu mathtrainer napisana z użyciem biblioteki allegro // projekt na studia
+
+    <h1>
+        Infix - bardzo fajna gra matematyczna (v. 1.0)
+    </h1>
+
+    <p>
+        O nie! Najlepszy przyjaciel kaczki Misato zagubił się w magicznych górach matematyki! Żeby go odnaleźć, Misato
+        musi zmierzyć się z olbrzymami zamieszkującymi magiczną krainę i odnaleźć swojego przyjaciela.
+    </p>
+
+    <h2>
+        Jak grać?
+    </h2>
+
+    <h4>
+        Menu główne
+    </h4>
+
+    <p>
+        Po włączeniu programu naszym oczom okazuje się menu główne, w którym możemy wybrać poziom trudności (1-20, 0. to
+        tryb developerski i ruletka, czy program wysypie się przy dzieleniu przez 0 c:)
+        używając strzałek
+        (poziom decyduje o zakresie losowanych do działań liczb - dolny to 2*poziom, górny to 5*poziom).<br><br> By
+        przejść do rozgrywki, wystarczy wcisnąć spację.
+    </p>
+
+    <h4>
+        Rozgrywka
+    </h4>
+
+    <p>
+        Kaczka rozpoczyna poszukiwania przyjaciela z lewej strony planszy. Porusza się w lewo i prawo, można wprawić
+        ją
+        w ruch, używając strzałek.<br><br>
+
+        Na jej drodze zawsze stoi pięciu olbrzymów. Kiedy Miasto spotka olbrzyma, nie może przejść dalej, dopóki nie
+        rozwiąże zadania matematycznego, zadanego przez lokalsa.<br><br>
+
+        Odpowiedź na nie można wprowadzić, używając klawiszy 0-9.<br><br>
+
+        Obecna wersja niestety nie przewiduje pokazywania inputu na ekranie, można wspomóc się konsolą, na której co
+        wciśnięcie klawisza pokazywany jest obecny stan bufora.<br><br>
+
+        Błędy można kasować backspace'em.<br><br>
+
+        Kiedy input będzie zgadzał się z wynikiem działania, olbrzym usunie się z drogi Misato, by mogła ona
+        kontynuować
+        poszukiwania przyjaciela.<br><br>
+
+        Niech gracz opiera się pokusie, by wracać w miejsca wcześniejszych walk z olbrzymami, gdyż ponownie zapytają
+        się
+        one
+        kaczki o to,
+        czy ma jakiś problem (matematyczny, do rozwiązania).<br><br>
+
+        Po stanięciu w szranki z pięcioma olbrzymami, Misato w końcu odnajdzie swojego przyjaciela, a poziom
+        zakończy
+        się.<br><br>
+
+        Po ukończeniu poziomu ujrzymy skromny ekran końcowy. Po wciśnięciu spacji zostaniemy przeniesieni z powrotem
+        do
+        menu głównego.<br><br>
+
+        W grze nie ma opcji przegranej, w związku z czym nie trzeba się spieszyć c:<br><br>
+    </p>
+
+    <h2>
+        Zrzuty ekranu
+    </h2>
+
+    <img src="screen1.png"><br><br>
+
+    <img src="screen2.png"><br><br>
+
+    <img src="screen3.png"><br><br>
+
+    <h2>
+        Parę słów od siebie
+    </h2>
+
+    <p>
+        Jest to de facto mój pierwszy większy projekt programistyczny, w związku z czym proszę serdecznie o
+        wybaczenie
+        spaghetti w mainie, powtarzania złych praktyk, tego, że zegar źle działa, etc. <br><br>
+
+        Z pewnością w przyszłości wrócę do tego projektu i rozbuduję go bardziej, gdyż uważam, że jest w nim jakiś
+        potencjał.<br><br>
+
+        Pozdrawiam też siebie z przyszłości, który będzie płakał nad jakością napisanego kodu. <br><br>
+
+        Nie posiadam praw do większości grafik i dźwięków. Projekt nie jest komercyjny. <br>
+    </p>
+
+    <h6>
+        Miłosz Bogacz,
+        05.06.2022 <br>
+        <img src="malpa.png">
+    </h6>
