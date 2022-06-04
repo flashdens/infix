@@ -25,7 +25,7 @@ int inicjujAllegro() {
     al_install_keyboard();
     al_install_audio();
     al_init_acodec_addon();
-    al_reserve_samples(5);
+    al_reserve_samples(6);
     return 0;
 }
 
