@@ -29,27 +29,25 @@ void stworzDzialanie(int tab[], int lvl) {
         case 1:
             tab[3] = tab[0] - tab[1];
             tab[2] = 45;
-        warunkiOdejmowania:
-            if (tab[3] < 0) {
+            while (tab[3] < 0) {
                 tab[0] = losujLiczbe(2 * lvl, 5 * lvl);
                 tab[1] = losujLiczbe(2 * lvl, 5 * lvl);
                 tab[3] = tab[0] - tab[1];
-                goto warunkiOdejmowania;
             }
             return;
         case 2:
+            tab[0] = losujLiczbe(1 * lvl, 3 * lvl); // nerf mnozenia
+            tab[1] = losujLiczbe(1 * lvl, 3 * lvl);
             tab[3] = tab[0] * tab[1];
             tab[2] = 42;
             return;
         case 3:
             tab[3] = tab[0] / tab[1];
             tab[2] = 47;
-        warunkiDzielenia:
-            if (tab[3] <= 0 || tab[0] % tab[1] != 0) {
+            while (tab[3] <= 0 || tab[3] == 1 || tab[0] % tab[1] != 0) {
                 tab[0] = losujLiczbe(1 * lvl, 5 * lvl);
                 tab[1] = losujLiczbe(1 * lvl, 5 * lvl);
                 tab[3] = tab[0] / tab[1];
-                goto warunkiDzielenia;
             }
             return;
     }

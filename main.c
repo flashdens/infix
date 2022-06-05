@@ -9,11 +9,6 @@
 #include "funkcjeallegrowe.h"
 
 int main() {
-    int x = 0, y = 425, klatka = 0, sprite = 0, rozwiazane = 1, lvl = 5, liczba1, liczba2, wynik, znak, tabGrowa[4], bufor1 = 0;
-    char bufor2[6];
-    bufor2[0] = '\0';
-    bool cannons = true, rysuj = true, wygrana = false, menuGlowne = true, stworzonoDzialanie = false;
-
     int init = inicjujAllegro();
     if (init) {
         return 1;
@@ -48,6 +43,12 @@ int main() {
     al_register_event_source(queue, al_get_timer_event_source(timer));
     al_start_timer(timer);
     al_play_sample(menu, 0.5, 0.0, 1.0, ALLEGRO_PLAYMODE_LOOP, 0);
+
+    // deklaracja zmiennych growych (przepraszam za balagan)
+    int x = 0, y = 425, klatka = 0, sprite = 0, rozwiazane = 1, lvl = 5, liczba1, liczba2, wynik, znak, tabGrowa[4], bufor1 = 0;
+    char bufor2[6];
+    bufor2[0] = '\0'; // przygotowanie bufora (pozniej sie przyda c:)
+    bool cannons = true, rysuj = true, wygrana = false, menuGlowne = true, stworzonoDzialanie = false;
     // da game loop
     DWORD start = GetTickCount();
     DWORD czas;
@@ -142,6 +143,7 @@ int main() {
                     al_get_keyboard_state(&keyState);
                     al_get_keyboard_event_source();
                     if (event.type == ALLEGRO_EVENT_KEY_DOWN) {
+
                         wprowadzLiczbeDoBufora(bufor2, event);
                         bufor1 = atoi(bufor2);
                         printf("%d\n", bufor1);
@@ -171,13 +173,13 @@ int main() {
                 al_draw_textf(comicMaly, al_map_rgb(255, 30, 255), 350, 100, 0, "Poziom %d ukonczony!", lvl);
                 al_draw_textf(comicMaly, al_map_rgb(255, 30, 255), 350, 200, 0, "Twoj czas to %d s.", czas / 1000);
                 al_draw_text(comicMaly, al_map_rgb(255, 30, 255), 250, 300, 0,
-                             "Wcisnij enter, aby powrocic do menu glownego");
+                             "Wcisnij spacje, aby powrocic do menu glownego");
                 al_get_keyboard_state(&keyState);
                 if (event.keyboard.keycode == ALLEGRO_KEY_ESCAPE)
                     cannons = false;
                 if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
                     cannons = false;
-                if (event.type = ALLEGRO_KEY_DOWN && al_key_down(&keyState, ALLEGRO_KEY_ENTER)) {
+                if (event.type = ALLEGRO_KEY_DOWN && al_key_down(&keyState, ALLEGRO_KEY_SPACE)) {
                     wygrana = false;
                     menuGlowne = true;
                     rozwiazane = 1;
