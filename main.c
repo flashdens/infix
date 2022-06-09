@@ -10,9 +10,9 @@
 
 int main() {
     int init = inicjujAllegro();
-    if (init) {
+    if (init)
         return 1;
-    }
+
 
     ALLEGRO_EVENT_QUEUE *queue;
     ALLEGRO_DISPLAY *display;
@@ -36,8 +36,8 @@ int main() {
     display = al_create_display(960, 540);
     queue = al_create_event_queue();
     timer = al_create_timer(1.0 / 60.0);
-    if (!display)printf("dupa\n");
-    printf("hehe xd\n");
+    if (!display)
+        printf("Blad przy inicjalizacji displayu!\n");
     al_register_event_source(queue, al_get_keyboard_event_source());
     al_register_event_source(queue, al_get_display_event_source(display));
     al_register_event_source(queue, al_get_timer_event_source(timer));
@@ -45,13 +45,17 @@ int main() {
     al_play_sample(menu, 0.5, 0.0, 1.0, ALLEGRO_PLAYMODE_LOOP, 0);
 
     // deklaracja zmiennych growych (przepraszam za balagan)
-    int x = 0, y = 425, klatka = 0, sprite = 0, rozwiazane = 1, lvl = 5, liczba1, liczba2, wynik, znak, tabGrowa[4], bufor1 = 0;
+    int x = 0, y = 425, klatka = 0, sprite = 0, rozwiazane = 1, lvl = 5;
+    int liczba1, liczba2, wynik, znak, tabGrowa[4], bufor1;
     char bufor2[6];
     bufor2[0] = '\0'; // przygotowanie bufora (pozniej sie przyda c:)
-    bool cannons = true, rysuj = true, wygrana = false, menuGlowne = true, stworzonoDzialanie = false;
-    // da game loop
+    bool cannons = true, wygrana = false, menuGlowne = true, stworzonoDzialanie = false;
+
+    // zegar
     DWORD start = GetTickCount();
     DWORD czas;
+
+    // da game loop
     while (cannons) {
         ALLEGRO_EVENT event;
         al_wait_for_event(queue, &event);
@@ -67,9 +71,7 @@ int main() {
                 cannons = false;
                 break;
             }
-            rysuj = true;
         }
-        if (rysuj) { // to rysuj troche z czapy jest
             al_draw_bitmap(tlo, 0, 0, 0);
             al_draw_bitmap(goal, 850, 399, 0);
             while (menuGlowne) {
@@ -103,8 +105,7 @@ int main() {
                     al_play_sample(ok, 1, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, 0);
                 }
                 al_flip_display();
-                continue;
-            }
+           }
 
             // animacja kaczki
             if (!sprite) {
@@ -143,7 +144,6 @@ int main() {
                     al_get_keyboard_state(&keyState);
                     al_get_keyboard_event_source();
                     if (event.type == ALLEGRO_EVENT_KEY_DOWN) {
-
                         wprowadzLiczbeDoBufora(bufor2, event);
                         bufor1 = atoi(bufor2);
                         printf("%d\n", bufor1);
@@ -153,7 +153,6 @@ int main() {
                             al_play_sample(ok, 1, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, 0);
                             x += 2;
                             rozwiazane++;
-                            bufor1 = 0;
                             memset(bufor2, 0, strlen(bufor2));
                             stworzonoDzialanie = false;
                             break;
@@ -179,7 +178,7 @@ int main() {
                     cannons = false;
                 if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
                     cannons = false;
-                if (event.type = ALLEGRO_KEY_DOWN && al_key_down(&keyState, ALLEGRO_KEY_SPACE)) {
+                if (event.type = al_key_down(&keyState, ALLEGRO_KEY_SPACE)) {
                     wygrana = false;
                     menuGlowne = true;
                     rozwiazane = 1;
@@ -191,11 +190,8 @@ int main() {
                 al_flip_display();
             }
             al_flip_display();
-            rysuj = false;
             klatka++;
-        }
     }
-    // naura
     al_destroy_display(display);
     al_destroy_event_queue(queue);
     al_destroy_font(comicDuzy);
