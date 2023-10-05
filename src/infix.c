@@ -5,15 +5,10 @@
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
 #include <allegro5/allegro_audio.h>
-#include "funkcjegrowe.h"
-#include "funkcjeallegrowe.h"
+#include "infix.h"
+#include "utils.h"
 
-int main() {
-    int init = inicjujAllegro();
-
-    if (init)
-        return 1;
-
+void infix () {
     ALLEGRO_EVENT event;
     ALLEGRO_EVENT_QUEUE *queue;
     ALLEGRO_DISPLAY *display;
@@ -115,37 +110,37 @@ int main() {
         al_flip_display();
 
         if (menuGlowne) {
-                al_wait_for_event(queue, &event);
+            al_wait_for_event(queue, &event);
 
-                if (event.type == ALLEGRO_EVENT_KEY_DOWN) {
-                    if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
-                        cannons = false;
-                        goto exit;
-                    }
-                    else if (event.keyboard.keycode == ALLEGRO_KEY_ESCAPE) {
-                        printf("vv");
-                        cannons = false;
-                        goto exit;
-                    }
-                    else if (event.keyboard.keycode == ALLEGRO_KEY_LEFT) {
-                        printf("e");
-                        if (lvl > 0)
-                            lvl--;
-                    }
-                    else if (event.keyboard.keycode == ALLEGRO_KEY_RIGHT) {
-                        if (lvl < 20)
-                            lvl++;
-                    }
+            if (event.type == ALLEGRO_EVENT_KEY_DOWN) {
+                if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
+                    cannons = false;
+                    goto exit;
+                }
+                else if (event.keyboard.keycode == ALLEGRO_KEY_ESCAPE) {
+                    printf("vv");
+                    cannons = false;
+                    goto exit;
+                }
+                else if (event.keyboard.keycode == ALLEGRO_KEY_LEFT) {
+                    printf("e");
+                    if (lvl > 0)
+                        lvl--;
+                }
+                else if (event.keyboard.keycode == ALLEGRO_KEY_RIGHT) {
+                    if (lvl < 20)
+                        lvl++;
+                }
 
                     // start the game
-                    else if (event.keyboard.keycode == ALLEGRO_KEY_SPACE) {
-                        menuGlowne = false;
-                        al_stop_samples();
-                        al_play_sample(game, 1, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, 0);
-                        al_play_sample(ok, 1, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, 0);
-                        start = clock();
-                    }
+                else if (event.keyboard.keycode == ALLEGRO_KEY_SPACE) {
+                    menuGlowne = false;
+                    al_stop_samples();
+                    al_play_sample(game, 1, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, 0);
+                    al_play_sample(ok, 1, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, 0);
+                    start = clock();
                 }
+            }
             continue;
         }
 
@@ -166,62 +161,62 @@ int main() {
             }
         }
 
-            if (!stworzonoDzialanie) {
-                stworzDzialanie(tabGrowa, lvl);
-                liczba1 = tabGrowa[0];
-                liczba2 = tabGrowa[1];
-                znak = tabGrowa[2];
-                wynik = tabGrowa[3];
-                stworzonoDzialanie = true;
-            }
+        if (!stworzonoDzialanie) {
+            stworzDzialanie(tabGrowa, lvl);
+            liczba1 = tabGrowa[0];
+            liczba2 = tabGrowa[1];
+            znak = tabGrowa[2];
+            wynik = tabGrowa[3];
+            stworzonoDzialanie = true;
+        }
 
-            al_register_event_source(queue, al_get_timer_event_source(timer));
+        al_register_event_source(queue, al_get_timer_event_source(timer));
 
-            if (x % 150 == 0 && x != 0) {
-                while (cannons) {
-                    al_wait_for_event(queue, &event);
-                    if (event.type == ALLEGRO_EVENT_KEY_DOWN) {
-                        wprowadzLiczbeDoBufora(bufor2, event);
-                        bufor1 = atoi(bufor2);
-                        printf("%d\n", bufor1);
-                        if (event.keyboard.keycode == ALLEGRO_KEY_ESCAPE)
-                            cannons = false;
-                        if (bufor1 == wynik) {
-                            al_play_sample(ok, 1, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, 0);
-                            x += 2;
-                            rozwiazane++;
-                            memset(bufor2, 0, strlen(bufor2));
-                            stworzonoDzialanie = false;
-                            break;
-                        }
+        if (x % 150 == 0 && x != 0) {
+            while (cannons) {
+                al_wait_for_event(queue, &event);
+                if (event.type == ALLEGRO_EVENT_KEY_DOWN) {
+                    updateResultBuf(bufor2, event);
+                    bufor1 = atoi(bufor2);
+                    printf("%d\n", bufor1);
+                    if (event.keyboard.keycode == ALLEGRO_KEY_ESCAPE)
+                        cannons = false;
+                    if (bufor1 == wynik) {
+                        al_play_sample(ok, 1, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, 0);
+                        x += 2;
+                        rozwiazane++;
+                        memset(bufor2, 0, strlen(bufor2));
+                        stworzonoDzialanie = false;
+                        break;
                     }
                 }
             }
+        }
 
-            if (rozwiazane == 6) {
-                finish = czas - start;
-                al_play_sample(win, 2, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, 0);
-                wygrana = true;
-                rozwiazane = 0;
-            }
+        if (rozwiazane == 6) {
+            finish = czas - start;
+            al_play_sample(win, 2, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, 0);
+            wygrana = true;
+            rozwiazane = 0;
+        }
 
-            if (wygrana) {
-                al_wait_for_event(queue, &event);
-                if (event.keyboard.keycode == ALLEGRO_KEY_ESCAPE)
-                    cannons = false;
-                if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
-                    cannons = false;
-                if (event.type == al_key_down(&keyState, ALLEGRO_KEY_SPACE)) {
-                    wygrana = false;
-                    menuGlowne = true;
-                    rozwiazane = 1;
-                    al_stop_samples();
-                    al_play_sample(ok, 1, 0.0, 1, ALLEGRO_PLAYMODE_ONCE, 0);
-                    x = 0;
-                    czas = 0;
-                }
+        if (wygrana) {
+            al_wait_for_event(queue, &event);
+            if (event.keyboard.keycode == ALLEGRO_KEY_ESCAPE)
+                cannons = false;
+            if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
+                cannons = false;
+            if (event.type == al_key_down(&keyState, ALLEGRO_KEY_SPACE)) {
+                wygrana = false;
+                menuGlowne = true;
+                rozwiazane = 1;
+                al_stop_samples();
+                al_play_sample(ok, 1, 0.0, 1, ALLEGRO_PLAYMODE_ONCE, 0);
+                x = 0;
+                czas = 0;
             }
-            klatka++;
+        }
+        klatka++;
     }
 
     exit:
@@ -243,5 +238,4 @@ int main() {
     al_destroy_sample(ok);
     al_destroy_sample(win);
     al_destroy_sample(game);
-    return 0;
 }
