@@ -1,8 +1,13 @@
-## infix
-prosta gra typu mathtrainer napisana z użyciem biblioteki allegro // projekt na studia
+## infix (wip)
+
+a mathtrainer game
 
 https://htmlpreview.github.io/?https://github.com/flashdens/rzeczy_studiowe/blob/master/semestr_2/wprowadzenie_do_programowania/wdp_projekt/infix-main/dok.html
 
-# kompilacja
+## dependencies
 
-w celu skompilowania programu użyj wybranego przez siebie kompilatora języka C. wymagana jest biblioteka Allegro w wersji 5.2!
+- c compiler of your choice (e.g. gcc)
+- liballegro >= 5.2 (https://github.com/liballeg/allegro_wiki/wiki/Quickstart)
+- cmake >= 3.26
+
+ 
