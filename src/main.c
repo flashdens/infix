@@ -4,6 +4,9 @@
 int main() {
     if (initAll() != 0)
         return 1;
-    infix();
-    return 0;
+
+    if (infix() == 0)
+        return 0;
+    else
+        return 1;
 }

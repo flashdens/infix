@@ -1,0 +1,43 @@
+# Ignore build artifacts and generated files
+CMakeFiles/
+CMakeScripts/
+CMakeCache.txt
+cmake-build-debug/
+cmake-build-release/
+CMakeSettings.json
+compile_commands.json
+*.cmake
+*.cbp
+*.layout
+*.depend
+*.depend.*.txt
+*.layout.*
+CMakeUserPresets.json
+Makefile
+*.make
+CMakeDoxyfile.in
+
+# Ignore executables and compiled code
+*.exe
+*.out
+*.so
+*.dll
+*.a
+*.lib
+
+# Ignore IDE-specific files and directories
+.idea/
+.vscode/
+*.suo
+*.user
+*.userosscache
+*.sln
+
+# Ignore system and generated files
+.DS_Store
+Thumbs.db
+
+# Ignore user-specific files
+*.swp
+*~
+*.bak

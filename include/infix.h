@@ -4,6 +4,6 @@
 #define SCREEN_WIDTH 960
 #define SCREEN_HEIGHT 540
 
-void infix();
+int infix();
 
 #endif //INFIX_INFIX_H

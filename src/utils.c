@@ -23,13 +23,47 @@ int initAll() {
         printf("Blad przy inicjalizacji gry! Skontaktuj sie z sekretariatem WZiKS\n");
         return 1;
     }
-    al_init_font_addon();
-    al_init_ttf_addon();
-    al_init_image_addon();
-    al_install_keyboard();
-    al_install_audio();
-    al_init_acodec_addon();
-    al_reserve_samples(5);
+
+    if (!al_init()) {
+        printf("Error initializing Allegro\n");
+        return 1;
+    }
+
+    if (!al_init_image_addon()) {
+        printf("Error initializing Allegro Image addon\n");
+        return 1;
+    }
+
+    if (!al_install_keyboard()) {
+        printf("Error installing keyboard\n");
+        return 1;
+    }
+
+    if (!al_install_audio()) {
+        printf("Error installing audio\n");
+        return 1;
+    }
+
+    if (!al_init_acodec_addon()) {
+        printf("Error initializing audio codecs\n");
+        return 1;
+    }
+
+    if (!al_init_font_addon()) {
+        printf("Error initializing Allegro Font addon\n");
+        return 1;
+    }
+
+    if (!al_init_ttf_addon()) {
+        printf("Error initializing Allegro TTF addon\n");
+        return 1;
+    }
+
+    if (!al_reserve_samples(5)) {
+        printf("Error reserving samples\n");
+        return 1;
+    }
+
     return 0;
 }
 
