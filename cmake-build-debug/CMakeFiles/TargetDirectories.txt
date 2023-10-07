@@ -1,3 +1,0 @@
-/home/miloszek/CLionProjects/infix/cmake-build-debug/CMakeFiles/infix.dir
-/home/miloszek/CLionProjects/infix/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/miloszek/CLionProjects/infix/cmake-build-debug/CMakeFiles/rebuild_cache.dir
