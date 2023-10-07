@@ -1,7 +1,3 @@
-//
-// Created by miloszek on 05.10.23.
-//
-
 #ifndef INFIX_UTILS_H
 #define INFIX_UTILS_H
 

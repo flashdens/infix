@@ -14,6 +14,10 @@
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
 
+#include "utils.h"
+
+#define ASCII_OFFSET 21
+
 int initAll() {
     if (!al_init()) {
         printf("Blad przy inicjalizacji gry! Skontaktuj sie z sekretariatem WZiKS\n");
@@ -29,52 +33,13 @@ int initAll() {
     return 0;
 }
 
-void updateResultBuf(char *bufor, ALLEGRO_EVENT event) {
-    char x;
-    switch (event.keyboard.keycode) {
-        case ALLEGRO_KEY_0:
-            x = '0';
-            bufor = strncat(bufor, &x, 1);
-            break;
-        case ALLEGRO_KEY_1:
-            x = '1';
-            bufor = strncat(bufor, &x, 1);
-            break;
-        case ALLEGRO_KEY_2:
-            x = '2';
-            bufor = strncat(bufor, &x, 1);
-            break;
-        case ALLEGRO_KEY_3:
-            x = '3';
-            bufor = strncat(bufor, &x, 1);
-            break;
-        case ALLEGRO_KEY_4:
-            x = '4';
-            bufor = strncat(bufor, &x, 1);
-            break;
-        case ALLEGRO_KEY_5:
-            x = '5';
-            bufor = strncat(bufor, &x, 1);
-            break;
-        case ALLEGRO_KEY_6:
-            x = '6';
-            bufor = strncat(bufor, &x, 1);
-            break;
-        case ALLEGRO_KEY_7:
-            x = '7';
-            bufor = strncat(bufor, &x, 1);
-            break;
-        case ALLEGRO_KEY_8:
-            x = '8';
-            bufor = strncat(bufor, &x, 1);
-            break;
-        case ALLEGRO_KEY_9:
-            x = '9';
-            bufor = strncat(bufor, &x, 1);
-            break;
-        case ALLEGRO_KEY_BACKSPACE:
-            bufor[strlen(bufor) - 1] = '\0';
-            break;
+void updateResultBuf(char *buf, ALLEGRO_EVENT event) {
+    if (event.type == ALLEGRO_EVENT_KEY_CHAR) {
+        char pressed = (char) (event.keyboard.keycode + ASCII_OFFSET);
+        if (pressed >= '0' && pressed <= '9')
+            strncat(buf, &pressed, 1);
+        else if (pressed == (char) ALLEGRO_KEY_BACKSPACE + ASCII_OFFSET)
+            buf[strlen(buf) - 1] = '\0';
     }
 }
 

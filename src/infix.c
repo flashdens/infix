@@ -38,7 +38,6 @@ void infix() {
     ALLEGRO_SAMPLE *gameSt = al_load_sample("gameSt.ogg");
 
     al_register_event_source(queue, al_get_keyboard_event_source());
-    al_register_event_source(queue, al_get_timer_event_source(timer));
     al_play_sample(menu, 0.5, 0.0, 1.0, ALLEGRO_PLAYMODE_LOOP, 0);
 
     // deklaracja zmiennych growych (przepraszam za balagan)
@@ -57,8 +56,7 @@ void infix() {
         if (menuGlowne) {
             al_get_next_event(queue, &event);
             if (event.type == ALLEGRO_EVENT_KEY_DOWN) {
-                if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
-                    cannons = false;
+                if (event.keyboard.keycode == ALLEGRO_KEY_ESCAPE) {
                     goto exit;
                 } else if (event.keyboard.keycode == ALLEGRO_KEY_LEFT) {
                     if (lvl > 0)
@@ -68,7 +66,7 @@ void infix() {
                         lvl++;
                 }
 
-                    // start the game
+                // start the game
                 else if (event.keyboard.keycode == ALLEGRO_KEY_SPACE) {
                     menuGlowne = false;
                     al_stop_samples();
@@ -85,8 +83,8 @@ void infix() {
 
             // handle player move
             al_get_keyboard_state(&keyState);
-            if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
-                cannons = false;
+            if (al_key_down(&keyState, ALLEGRO_KEY_ESCAPE)) {
+                goto exit;
             } else if (!solve) {
                 if (al_key_down(&keyState, ALLEGRO_KEY_RIGHT))
                     x += 2;
@@ -113,11 +111,11 @@ void infix() {
         if (solve) {
             al_get_next_event(queue, &event);
             if (event.type == ALLEGRO_EVENT_KEY_DOWN) {
+                al_get_next_event(queue, &event);
                 updateResultBuf(bufor2, event);
                 bufor1 = atoi(bufor2);
-                printf("%d\n", bufor1);
                 if (event.keyboard.keycode == ALLEGRO_KEY_ESCAPE)
-                    cannons = false;
+                    goto exit;
                 if (bufor1 == wynik) {
                     al_play_sample(ok, 1, 0, 1, ALLEGRO_PLAYMODE_ONCE, 0);
                     x += 2;
