@@ -70,6 +70,27 @@ build CMakeFiles/infix.dir/src/utils.c.o: C_COMPILER__infix_unscanned_Debug /hom
   OBJECT_DIR = CMakeFiles/infix.dir
   OBJECT_FILE_DIR = CMakeFiles/infix.dir/src
 
+build CMakeFiles/infix.dir/src/draw.c.o: C_COMPILER__infix_unscanned_Debug /home/miloszek/CLionProjects/infix/src/draw.c || cmake_object_order_depends_target_infix
+  DEP_FILE = CMakeFiles/infix.dir/src/draw.c.o.d
+  FLAGS = -g -std=gnu11 -fdiagnostics-color=always
+  INCLUDES = -I/home/miloszek/CLionProjects/infix/. -I/home/miloszek/CLionProjects/infix/include
+  OBJECT_DIR = CMakeFiles/infix.dir
+  OBJECT_FILE_DIR = CMakeFiles/infix.dir/src
+
+build CMakeFiles/infix.dir/src/operation.c.o: C_COMPILER__infix_unscanned_Debug /home/miloszek/CLionProjects/infix/src/operation.c || cmake_object_order_depends_target_infix
+  DEP_FILE = CMakeFiles/infix.dir/src/operation.c.o.d
+  FLAGS = -g -std=gnu11 -fdiagnostics-color=always
+  INCLUDES = -I/home/miloszek/CLionProjects/infix/. -I/home/miloszek/CLionProjects/infix/include
+  OBJECT_DIR = CMakeFiles/infix.dir
+  OBJECT_FILE_DIR = CMakeFiles/infix.dir/src
+
+build CMakeFiles/infix.dir/src/startup.c.o: C_COMPILER__infix_unscanned_Debug /home/miloszek/CLionProjects/infix/src/startup.c || cmake_object_order_depends_target_infix
+  DEP_FILE = CMakeFiles/infix.dir/src/startup.c.o.d
+  FLAGS = -g -std=gnu11 -fdiagnostics-color=always
+  INCLUDES = -I/home/miloszek/CLionProjects/infix/. -I/home/miloszek/CLionProjects/infix/include
+  OBJECT_DIR = CMakeFiles/infix.dir
+  OBJECT_FILE_DIR = CMakeFiles/infix.dir/src
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target infix
@@ -78,7 +99,7 @@ build CMakeFiles/infix.dir/src/utils.c.o: C_COMPILER__infix_unscanned_Debug /hom
 #############################################
 # Link the executable infix
 
-build infix: C_EXECUTABLE_LINKER__infix_Debug CMakeFiles/infix.dir/src/main.c.o CMakeFiles/infix.dir/src/infix.c.o CMakeFiles/infix.dir/src/utils.c.o
+build infix: C_EXECUTABLE_LINKER__infix_Debug CMakeFiles/infix.dir/src/main.c.o CMakeFiles/infix.dir/src/infix.c.o CMakeFiles/infix.dir/src/utils.c.o CMakeFiles/infix.dir/src/draw.c.o CMakeFiles/infix.dir/src/operation.c.o CMakeFiles/infix.dir/src/startup.c.o
   FLAGS = -g
   LINK_LIBRARIES = -lallegro  -lallegro_ttf  -lallegro_image  -lallegro_audio  -lallegro_acodec  -lallegro_font
   OBJECT_DIR = CMakeFiles/infix.dir

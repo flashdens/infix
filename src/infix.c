@@ -5,45 +5,42 @@
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
 #include <allegro5/allegro_audio.h>
+
 #include "infix.h"
 #include "utils.h"
+#include "draw.h"
+#include "operation.h"
 
 #define SCREEN_WIDTH 960
 #define SCREEN_HEIGHT 540
 
-#define BASE_Y 425
+struct playerPos playerPos;
 
-struct playerPos {
-    float x;
-} playerPos;
+struct timer timer;
+
+ALLEGRO_EVENT event;
+ALLEGRO_EVENT_QUEUE *queue;
+ALLEGRO_TIMER *allegroTimer = NULL;
+ALLEGRO_DISPLAY *display = NULL;
+ALLEGRO_KEYBOARD_STATE keyState;
+ALLEGRO_FONT *comicSmall = NULL;
+ALLEGRO_FONT *comicLarge = NULL;
+ALLEGRO_BITMAP *bgBitmap = NULL;
+ALLEGRO_BITMAP *goalBitmap = NULL;
+ALLEGRO_BITMAP *duck1Bitmap = NULL;
+ALLEGRO_BITMAP *duck2Bitmap = NULL;
+ALLEGRO_BITMAP *obstacleBitmap = NULL;
+ALLEGRO_BITMAP *levelBitmap = NULL;
+ALLEGRO_BITMAP *leftArrowBitmap = NULL;
+ALLEGRO_BITMAP *rightArrowBitmap = NULL;
+ALLEGRO_SAMPLE *menu = NULL;
+ALLEGRO_SAMPLE *gameSt = NULL;
+ALLEGRO_SAMPLE *ok = NULL;
+ALLEGRO_SAMPLE *win = NULL;
 
 int infix() {
 
     bool initError = false;
-    ALLEGRO_EVENT event;
-
-    ALLEGRO_EVENT_QUEUE *queue;
-
-    ALLEGRO_TIMER *timer = NULL;
-    ALLEGRO_DISPLAY *display = NULL;
-    ALLEGRO_KEYBOARD_STATE keyState;
-
-    ALLEGRO_FONT *comicSmall = NULL;
-    ALLEGRO_FONT *comicLarge = NULL;
-
-    ALLEGRO_BITMAP *bgBitmap = NULL;
-    ALLEGRO_BITMAP *goalBitmap = NULL;
-    ALLEGRO_BITMAP *duck1Bitmap = NULL;
-    ALLEGRO_BITMAP *duck2Bitmap = NULL;
-    ALLEGRO_BITMAP *obstacleBitmap = NULL;
-    ALLEGRO_BITMAP *levelBitmap = NULL;
-    ALLEGRO_BITMAP *leftArrowBitmap = NULL;
-    ALLEGRO_BITMAP *rightArrowBitmap = NULL;
-
-    ALLEGRO_SAMPLE *menu = NULL;
-    ALLEGRO_SAMPLE *gameSt = NULL;
-    ALLEGRO_SAMPLE *ok = NULL;
-    ALLEGRO_SAMPLE *win = NULL;
 
     queue = al_create_event_queue();
     if (!queue) {
@@ -53,10 +50,10 @@ int infix() {
     }
     al_register_event_source(queue, al_get_keyboard_event_source());
 
-    // init timer
-    timer = al_create_timer(1.0 / 60.0);
-    if (!timer) {
-        printf("Error creating timer\n");
+    // init allegroTimer
+    allegroTimer = al_create_timer(1.0 / 60.0);
+    if (!allegroTimer) {
+        printf("Error creating allegroTimer\n");
         initError = true;
         goto cleanup;
     }
@@ -173,13 +170,9 @@ int infix() {
     al_play_sample(menu, 0, 0, 1, ALLEGRO_PLAYMODE_LOOP, 0);
 
     int klatka = 0, sprite = 0, rozwiazane = 1, lvl = 5;
-    int liczba1, liczba2, wynik, znak, tabGrowa[4], bufor1;
-    char bufor2[6];
-    bufor2[0] = '\0'; // przygotowanie bufora (pozniej sie przyda c:)
+    int liczba1, opArray[4], userGuess;
+    char bufor2[6] = {'\0'};
     bool cannons = true, wygrana = false, menuGlowne = true, stworzonoDzialanie = false, game = false, solve = false;
-
-    // zegar todo use allegrotimer
-    long long start, czas, finish;
 
     // da game loop
     while (cannons) {
@@ -203,15 +196,15 @@ int infix() {
                     al_stop_samples();
                     al_play_sample(gameSt, 1, 0, 1, ALLEGRO_PLAYMODE_ONCE, 0);
                     al_play_sample(ok, 1, 0, 1, ALLEGRO_PLAYMODE_ONCE, 0);
-                    start = al_get_timer_count(timer);
-                    al_start_timer(timer);
+                    timer.startTime = al_get_timer_count(allegroTimer);
+                    al_start_timer(allegroTimer);
                     game = true;
                 }
             }
         }
 
         if (game) {
-            czas = al_get_timer_count(timer) - start;
+            timer.gameTime = al_get_timer_count(allegroTimer) - timer.startTime;
             // handle player move
             al_get_keyboard_state(&keyState);
             if (al_key_down(&keyState, ALLEGRO_KEY_ESCAPE)) {
@@ -229,11 +222,7 @@ int infix() {
 
             // handle equation generation
             if (!stworzonoDzialanie) {
-                stworzDzialanie(tabGrowa, lvl);
-                liczba1 = tabGrowa[0];
-                liczba2 = tabGrowa[1];
-                znak = tabGrowa[2];
-                wynik = tabGrowa[3];
+                opGen(opArray, lvl);
                 stworzonoDzialanie = true;
             }
         }
@@ -244,16 +233,16 @@ int infix() {
             if (event.type == ALLEGRO_EVENT_KEY_DOWN) {
                 al_get_next_event(queue, &event);
                 updateResultBuf(bufor2, event);
-                bufor1 = atoi(bufor2);
+                userGuess = atoi(bufor2);
                 if (event.keyboard.keycode == ALLEGRO_KEY_ESCAPE)
                     goto cleanup;
-                if (bufor1 == wynik) {
+                if (userGuess == EQ_RES) {
                     al_play_sample(ok, 1, 0, 1, ALLEGRO_PLAYMODE_ONCE, 0);
                     playerPos.x += 2;
                     rozwiazane++;
                     memset(bufor2, 0, strlen(bufor2));
                     stworzonoDzialanie = false;
-                    bufor1 = 0;
+                    userGuess = 0;
                     solve = false;
                     game = true;
                 }
@@ -261,7 +250,7 @@ int infix() {
         }
 
         if (rozwiazane == 6) {
-            finish = czas - start;
+            al_stop_timer(allegroTimer);
             al_play_sample(win, 2, 0, 1, ALLEGRO_PLAYMODE_ONCE, 0);
             wygrana = true;
             game = false;
@@ -281,72 +270,30 @@ int infix() {
                 al_stop_samples();
                 al_play_sample(ok, 1, 0, 1, ALLEGRO_PLAYMODE_ONCE, 0);
                 playerPos.x = 0;
-                czas = 0;
+                timer.gameTime = 0;
             }
         }
         klatka++;
 
-        // draw base
-        al_draw_bitmap(bgBitmap, 0, 0, 0);
-
-        // draw menu screen
+        drawBase();
         if (menuGlowne) {
-            al_draw_text(comicLarge, al_map_rgb(255, 255, 255), 0, 0, 0, "instrukcja znajduje sie w dokumentacji");
-            al_draw_text(comicSmall, al_map_rgb(255, 255, 255), 300, 75, 0, "infix");
-            al_draw_text(comicLarge, al_map_rgb(255, 255, 255), 350, 175, 0, "bardzo fajna gra matematyczna");
-            al_draw_text(comicLarge, al_map_rgb(255, 30, 255), 255, 275, 0,
-                         "wybierz poziom za pomoca strzalek i wcisnij spacje!");
-            al_draw_bitmap(levelBitmap, 380, 350, 0);
-            al_draw_bitmap(leftArrowBitmap, 260, 373, 0);
-            al_draw_bitmap(rightArrowBitmap, 544, 380, 0);
-            al_draw_bitmap(levelBitmap, 380, 350, 0);
-            al_draw_textf(comicSmall, al_map_rgb(255, 255, 255), 410, 360, 0, "%d", lvl);
+            drawMenu(lvl);
         }
 
         // draw game screen
         if (game || solve) {
-            al_draw_textf(comicSmall, al_map_rgb(255, 255, 255), 0, 0, 0, "%d %c %d =", liczba1, znak, liczba2);
-            al_draw_textf(comicSmall, al_map_rgb(255, 255, 255), 600, 0, 0, "%.2f", ALLEGRO_MSECS_TO_SECS(
-                    al_get_timer_count(timer)) * 60);
-
-            // draw duck
-            if (!sprite) {
-                al_draw_bitmap(duck2Bitmap, playerPos.x, BASE_Y, 0);
-                if (klatka >= 15) {
-                    sprite = 1;
-                    klatka = 0;
-                }
-            } else {
-                al_draw_bitmap(duck1Bitmap, playerPos.x, BASE_Y, 0);
-                if (klatka >= 15) {
-                    sprite = 0;
-                    klatka = 0;
-                }
-            }
-
-            // draw obstacles
-            for (int i = rozwiazane; i <= 5; ++i) {
-                al_draw_bitmap(obstacleBitmap, 150 * i, BASE_Y, 0);
-            }
-            al_draw_bitmap(goalBitmap, 850, 399, 0);
-
+            drawUI(timer, opArray);
+            drawCharacters(&sprite, &klatka, rozwiazane);
         }
 
         // draw user input
         if (solve) {
-            al_draw_textf(comicSmall, al_map_rgb(255, 255, 255), 300, 200, 0, "Your guess: %d", bufor1);
+            drawUserGuess(userGuess);
         }
 
         // draw victory screen
         if (wygrana) {
-            al_clear_to_color(al_map_rgb(255, 255, 255));
-            al_draw_bitmap(bgBitmap, 0, 0, 0);
-            al_draw_text(comicSmall, al_map_rgb(255, 255, 255), 300, 0, 0, "Gratulacje!");
-            al_draw_textf(comicLarge, al_map_rgb(255, 30, 255), 350, 100, 0, "Poziom %d ukonczony!", lvl);
-            al_draw_textf(comicLarge, al_map_rgb(255, 30, 255), 350, 200, 0, "Twoj czas to %.2f s.", ALLEGRO_MSECS_TO_SECS(
-                                                                                                             finish) * 60);
-            al_draw_text(comicLarge, al_map_rgb(255, 30, 255), 250, 300, 0,
-                         "Wcisnij spacje, aby powrocic do menu glownego");
+            drawVictoryScreen(timer);
         }
         // finally draw
         al_flip_display();
@@ -357,7 +304,7 @@ int infix() {
     al_destroy_event_queue(queue);
     al_destroy_font(comicSmall);
     al_destroy_font(comicLarge);
-    al_destroy_timer(timer);
+    al_destroy_timer(allegroTimer);
     al_uninstall_keyboard();
     al_destroy_bitmap(bgBitmap);
     al_destroy_bitmap(duck1Bitmap);

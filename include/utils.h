@@ -14,8 +14,6 @@ int initAll();
 
 void updateResultBuf(char *bufor, ALLEGRO_EVENT event);
 
-int generateRandom(int lower, int upper);
-
-void stworzDzialanie(int tab[], int lvl);
+int randIntInRange(int lower, int upper);
 
 #endif //INFIX_UTILS_H

@@ -11,6 +11,14 @@ add_executable(infix
         include/infix.h
         src/infix.c
         src/utils.c
+        include/globals.h
+        src/draw.c
+        include/draw.h
+        src/operation.c
+        include/operation.h
+        src/startup.c
+        include/startup.h
+        include/gamestate.h
 )
 
 target_include_directories(infix PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
