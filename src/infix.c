@@ -8,6 +8,15 @@
 #include "infix.h"
 #include "utils.h"
 
+#define SCREEN_WIDTH 960
+#define SCREEN_HEIGHT 540
+
+#define BASE_Y 425
+
+struct playerPos {
+    float x;
+} playerPos;
+
 int infix() {
 
     bool initError = false;
@@ -163,7 +172,6 @@ int infix() {
 
     al_play_sample(menu, 0, 0, 1, ALLEGRO_PLAYMODE_LOOP, 0);
 
-    float x = 0, y = 425;
     int klatka = 0, sprite = 0, rozwiazane = 1, lvl = 5;
     int liczba1, liczba2, wynik, znak, tabGrowa[4], bufor1;
     char bufor2[6];
@@ -171,7 +179,7 @@ int infix() {
     bool cannons = true, wygrana = false, menuGlowne = true, stworzonoDzialanie = false, game = false, solve = false;
 
     // zegar todo use allegrotimer
-    clock_t start, czas, finish;
+    long long start, czas, finish;
 
     // da game loop
     while (cannons) {
@@ -195,26 +203,26 @@ int infix() {
                     al_stop_samples();
                     al_play_sample(gameSt, 1, 0, 1, ALLEGRO_PLAYMODE_ONCE, 0);
                     al_play_sample(ok, 1, 0, 1, ALLEGRO_PLAYMODE_ONCE, 0);
-                    start = clock();
+                    start = al_get_timer_count(timer);
+                    al_start_timer(timer);
                     game = true;
                 }
             }
         }
 
         if (game) {
-            czas = clock() - start;
-
+            czas = al_get_timer_count(timer) - start;
             // handle player move
             al_get_keyboard_state(&keyState);
             if (al_key_down(&keyState, ALLEGRO_KEY_ESCAPE)) {
                 goto cleanup;
             } else if (!solve) {
                 if (al_key_down(&keyState, ALLEGRO_KEY_RIGHT))
-                    x += 2;
+                    playerPos.x += 2;
                 else if (al_key_down(&keyState, ALLEGRO_KEY_LEFT))
-                    x -= 2;
+                    playerPos.x -= 2;
 
-                if ((int) x % 150 == 0 && x != 0) {
+                if ((int) playerPos.x % 150 == 0 && playerPos.x != 0) {
                     solve = true;
                 }
             }
@@ -241,7 +249,7 @@ int infix() {
                     goto cleanup;
                 if (bufor1 == wynik) {
                     al_play_sample(ok, 1, 0, 1, ALLEGRO_PLAYMODE_ONCE, 0);
-                    x += 2;
+                    playerPos.x += 2;
                     rozwiazane++;
                     memset(bufor2, 0, strlen(bufor2));
                     stworzonoDzialanie = false;
@@ -272,7 +280,7 @@ int infix() {
                 rozwiazane = 1;
                 al_stop_samples();
                 al_play_sample(ok, 1, 0, 1, ALLEGRO_PLAYMODE_ONCE, 0);
-                x = 0;
+                playerPos.x = 0;
                 czas = 0;
             }
         }
@@ -298,18 +306,19 @@ int infix() {
         // draw game screen
         if (game || solve) {
             al_draw_textf(comicSmall, al_map_rgb(255, 255, 255), 0, 0, 0, "%d %c %d =", liczba1, znak, liczba2);
-            al_draw_textf(comicSmall, al_map_rgb(255, 255, 255), 600, 0, 0, "%.3ld", czas / 1000);
+            al_draw_textf(comicSmall, al_map_rgb(255, 255, 255), 600, 0, 0, "%.2f", ALLEGRO_MSECS_TO_SECS(
+                    al_get_timer_count(timer)) * 60);
 
             // draw duck
             if (!sprite) {
-                al_draw_bitmap(duck2Bitmap, x, y, 0);
-                if (klatka >= 20) {
+                al_draw_bitmap(duck2Bitmap, playerPos.x, BASE_Y, 0);
+                if (klatka >= 15) {
                     sprite = 1;
                     klatka = 0;
                 }
             } else {
-                al_draw_bitmap(duck1Bitmap, x, y, 0);
-                if (klatka >= 20) {
+                al_draw_bitmap(duck1Bitmap, playerPos.x, BASE_Y, 0);
+                if (klatka >= 15) {
                     sprite = 0;
                     klatka = 0;
                 }
@@ -317,7 +326,7 @@ int infix() {
 
             // draw obstacles
             for (int i = rozwiazane; i <= 5; ++i) {
-                al_draw_bitmap(obstacleBitmap, 150 * i, y, 0);
+                al_draw_bitmap(obstacleBitmap, 150 * i, BASE_Y, 0);
             }
             al_draw_bitmap(goalBitmap, 850, 399, 0);
 
@@ -334,7 +343,8 @@ int infix() {
             al_draw_bitmap(bgBitmap, 0, 0, 0);
             al_draw_text(comicSmall, al_map_rgb(255, 255, 255), 300, 0, 0, "Gratulacje!");
             al_draw_textf(comicLarge, al_map_rgb(255, 30, 255), 350, 100, 0, "Poziom %d ukonczony!", lvl);
-            al_draw_textf(comicLarge, al_map_rgb(255, 30, 255), 350, 200, 0, "Twoj czas to %.3ld s.", finish / 1000);
+            al_draw_textf(comicLarge, al_map_rgb(255, 30, 255), 350, 200, 0, "Twoj czas to %.2f s.", ALLEGRO_MSECS_TO_SECS(
+                                                                                                             finish) * 60);
             al_draw_text(comicLarge, al_map_rgb(255, 30, 255), 250, 300, 0,
                          "Wcisnij spacje, aby powrocic do menu glownego");
         }
